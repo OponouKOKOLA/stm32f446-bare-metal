@@ -11,7 +11,30 @@
 #include <stdint.h>
 
 
+
 #define __vo				volatile
+
+
+/* ARM Cortex Mx Processor NVIC ISERx Register Address  */
+
+#define NVIC_ISER0 			((__vo uint32_t*)0xE000E100)
+#define NVIC_ISER1 			((__vo uint32_t*)0xE000E104)
+#define NVIC_ISER2			((__vo uint32_t*)0xE000E108)
+#define NVIC_ISER3			((__vo uint32_t*)0xE000E10C)
+
+
+
+/* ARM Cortex Mx Processor NVIC ICERx Register Address  */
+
+#define NVIC_ICER0 			((__vo uint32_t*)0XE000E180)
+#define NVIC_ICER1 			((__vo uint32_t*)0xE000E184)
+#define NVIC_ICER2			((__vo uint32_t*)0xE000E188)
+#define NVIC_ICER3			((__vo uint32_t*)0xE000E18C)
+
+/* ARM Cortex Mx Processor NVIC Priority  Register Address  */
+
+#define NVIC_PR_BASSEADDR ((__vo uint32_t*)0xE000E400)
+#define Nber_PR_Bits 	4
 
 /* Bases address for FLASH, RAM & ROM Memory*/
 #define FLASH_BASE_ADDR		0x08000000U
@@ -70,6 +93,7 @@
 
 /******* Peripheral Register definition Structure *****/
 
+/* Structure for different Mode of GPIO*/
 typedef struct
 {
 	__vo uint32_t MODER;
@@ -84,6 +108,28 @@ typedef struct
 
 }GPIO_Reg_Def_t;
 
+/*Structure for EXTI Interruption*/
+
+typedef struct
+{
+	__vo uint32_t IMR;
+	__vo uint32_t EMR;
+	__vo uint32_t RTSR;
+	__vo uint32_t FTSR;
+	__vo uint32_t SWIER;
+	__vo uint32_t PR;
+}EXTI_Reg_Def_t;
+
+typedef struct
+{
+	__vo uint32_t MEMRMP;
+	__vo uint32_t PMC;
+	__vo uint32_t EXTICR[4];
+	__vo uint32_t RESERVED1[2];
+	__vo uint32_t CMPCR;
+	__vo uint32_t RESERVED2[2];
+	__vo uint32_t CFGR;
+} SYSCFG_Reg_Def_t;
 
 typedef struct
 {
@@ -123,6 +169,7 @@ typedef struct
 /*====================== ENABLE  Macros  Peripherals	============================ */
 
 /* Peripheral definition */
+
 #define GPIOA	((GPIO_Reg_Def_t*)GPIOA_BASE_ADDR)
 #define GPIOB	((GPIO_Reg_Def_t*)GPIOB_BASE_ADDR)
 #define GPIOC	((GPIO_Reg_Def_t*)GPIOC_BASE_ADDR)
@@ -133,6 +180,11 @@ typedef struct
 #define GPIOH	((GPIO_Reg_Def_t*)GPIOH_BASE_ADDR)
 
 #define RCC	((RCC_Reg_Def_t*)RCC_BASE_ADDR)
+
+#define EXTI ((EXTI_Reg_Def_t*)EXTI_BASE_ADDR)
+
+#define SYSCFG ((SYSCFG_Reg_Def_t*)SYSCFG_BASE_ADDR)
+
 
 /*Clock Enable Macros for GPIOx Peripherals*/
 
@@ -220,6 +272,16 @@ typedef struct
 
 #define SYSCFG_PCLCK_DI()	(RCC->APB2ENR &=~ (1<<14))
 
+#define GPIO_BASEADDR_TO_CODE(x)	   ((x==GPIOA) ? 0 :\
+										(x==GPIOB) ? 1 :\
+										(x==GPIOC) ? 2 :\
+										(x==GPIOD) ? 3 :\
+										(x==GPIOE) ? 4 :\
+										(x==GPIOF) ? 5 :\
+										(x==GPIOG) ? 6 :\
+										(x==GPIOH) ? 7 :0)
+
+
 // Some macros generic for the Clock
 #define ENABLE			1
 #define DISABLE			0
@@ -240,7 +302,8 @@ typedef struct
 #define GPIOG_REG_RESET()    do{ (RCC->AHB1RSTR |= (1<<6)); (RCC->AHB1RSTR &= ~(1<<6)); }while(0)
 #define GPIOH_REG_RESET()    do{ (RCC->AHB1RSTR |= (1<<7)); (RCC->AHB1RSTR &= ~(1<<7)); }while(0)
 
-#include "st32f446re_gpio_driver.h"
+#include "stm32f446re_gpio_driver.h"
+
 
 
 #endif /* INC_STM32F446_H_ */

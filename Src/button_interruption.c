@@ -1,35 +1,26 @@
 /*
- * led_bouton.c
+ * button_interruption.c
  *
- *  Created on: 21 sept. 2026
- *      Author: kokolaoponouemmanuel
- */
-/*
- * led_Toggle.c
- *
- *  Created on: 20 sept. 2026
+ *  Created on: 24 sept. 2026
  *      Author: kokolaoponouemmanuel
  */
 
-#include <stdint.h>
-
-#if !defined(__SOFT_FP__) && defined(__ARM_FP)
-  #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
-#endif
-
+#include <string.h>
 #include "stm32f446.h"
 #include "stm32f446re_gpio_driver.h"
 
-void delay(void)
-{
+#define HIGH 			1
+#define LOW				0
+#define button_press	LOW
 
-	for(volatile uint32_t i = 0; i < 500000/2; i++);
-}
+
+
 
 int main(void)
 {
 
 	GPIOx_Handler_t GpioLed = {0};
+
 
 	GpioLed.pGPIOx = GPIOA;
 	GpioLed.PinConf_t.GPIO_Pin_Number       = GPIO_Pin_Nber5;
@@ -54,23 +45,25 @@ int main(void)
 
 		GpioBtn.pGPIOx = GPIOC;
 		GpioBtn.PinConf_t.GPIO_Pin_Number       = GPIO_Pin_Nber13;
-		GpioBtn.PinConf_t.GPIO_Pin_Mode         = GPIO_MODE_INPUT;
+		GpioBtn.PinConf_t.GPIO_Pin_Mode         = GPIO_MODE_IT_FT;
 		GpioBtn.PinConf_t.GPIO_Pin_Speed        = GPIO_SPEED_FAST;
 		GpioBtn.PinConf_t.GPIO_PinOptype_Number = GPIO_OP_TYPE_PP;
 		GpioBtn.PinConf_t.GPIO_PinPuPdControl   = GPIO_PIN_PD;
 
 		GPIO_PeriClock_Control(GPIOC, ENABLE);
 		GPIO_Init(&GpioBtn);
+		GPIO_WriteToOutput_Pin(GPIOA, GPIO_Pin_Nber5, GPIO_PIN_RESET);
 
+		// IRQ Configuration
+		GPIO_IRQInterrupt(IRQ_Nber_EXTI15_10,ENABLE);
 
-		while(1)
-		{
-			if(GPIO_ReadFromInput_Pin(GPIOC,GPIO_Pin_Nber13)==0)
-			{
-				GPIO_ToggleOutput_Pin(GPIOA, GPIO_Pin_Nber5);
-				delay();
-			}
-		}
+		while(1);
+
 }
+//Clean the Pending event
+void EXTI15_10_IRQHandler(void)
+{
 
-
+	GPIO_IRQHandling(GPIO_Pin_Nber13);
+	GPIO_ToggleOutput_Pin(GPIOA, GPIO_Pin_Nber5);
+}

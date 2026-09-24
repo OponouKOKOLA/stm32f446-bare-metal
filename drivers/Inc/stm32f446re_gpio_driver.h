@@ -1,5 +1,5 @@
 /*
- * st32f446re_gpio_driver.h
+ * stm32f446re_gpio_driver.h
  *
  *  Created on: 18 sept. 2026
  *      Author: kokolaoponouemmanuel
@@ -82,6 +82,17 @@ typedef struct
 #define GPIO_Pin_Nber14	14
 #define GPIO_Pin_Nber15	15
 
+/* IRQ_Number Pin Number
+ *@IRQ_Number_Pin_Number*/
+
+
+#define  IRQ_Nber_EXTI0		6
+#define  IRQ_Nber_EXTI1		7
+#define  IRQ_Nber_EXTI2     8
+#define  IRQ_Nber_EXTI3		9
+#define  IRQ_Nber_EXTI4		10
+#define  IRQ_Nber_EXTI9_5	23
+#define  IRQ_Nber_EXTI15_10	40
 
 /*======== APIs Supported by this drivers==============*/
 
@@ -104,7 +115,11 @@ void GPIO_ToggleOutput_Pin(GPIO_Reg_Def_t *pGPIOx,uint8_t GPIO_Pin_Number);
 
 /* IRQ Configuartion and ISR Handling*/
 
-void GPIO_IRQConfig(uint8_t IRQ_Number,uint8_t IRQ_Priority,uint8_t ENorDI);
+void GPIO_IRQInterrupt(uint8_t IRQ_Number,uint8_t ENorDI);
+
+void GPIO_IRQ_Priority (uint8_t IRQ_Number,uint8_t IRQ_Priority);
+
+
 void GPIO_IRQHandling(uint8_t Pin_Number);
 
 

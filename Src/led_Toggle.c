@@ -12,7 +12,7 @@
 #endif
 
 #include "stm32f446.h"
-#include "st32f446re_gpio_driver.h"
+#include "stm32f446re_gpio_driver.h"
 
 void delay(void)
 {
