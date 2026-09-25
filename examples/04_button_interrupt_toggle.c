@@ -48,7 +48,7 @@ int main(void)
 		GpioBtn.PinConf_t.GPIO_Pin_Mode         = GPIO_MODE_IT_FT;
 		GpioBtn.PinConf_t.GPIO_Pin_Speed        = GPIO_SPEED_FAST;
 		GpioBtn.PinConf_t.GPIO_PinOptype_Number = GPIO_OP_TYPE_PP;
-		GpioBtn.PinConf_t.GPIO_PinPuPdControl   = GPIO_PIN_PD;
+		GpioBtn.PinConf_t.GPIO_PinPuPdControl   = GPIO_PIN_PU;
 
 		GPIO_PeriClock_Control(GPIOC, ENABLE);
 		GPIO_Init(&GpioBtn);

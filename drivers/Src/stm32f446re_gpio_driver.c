@@ -211,7 +211,7 @@ void GPIO_IRQInterrupt(uint8_t IRQ_Number,uint8_t ENorDI)
 		else if (IRQ_Number >= 64 && IRQ_Number <= 95)
 		{
 					//3.set enbale  ISER2 Register
-			*NVIC_ISER2 |= (1<<(IRQ_Number%64));
+			*NVIC_ISER2 |= (1<<(IRQ_Number%32));
 
 		}
 	}
@@ -221,19 +221,19 @@ void GPIO_IRQInterrupt(uint8_t IRQ_Number,uint8_t ENorDI)
 		if(IRQ_Number <= 31)
 		{
 			//1.set enbale  ISER0 Register
-			*NVIC_ICER0 |= (1<<IRQ_Number);
+			*NVIC_ICER0 = (1<<IRQ_Number);
 		}
 
 		else if (IRQ_Number >= 32 && IRQ_Number <= 63)
 		{
 			//2.set enbale  ISER1 Register
-			*NVIC_ICER1 |= (1<<(IRQ_Number%32));
+			*NVIC_ICER1 = (1<<(IRQ_Number%32));
 		}
 
 		else if (IRQ_Number >= 64 && IRQ_Number <= 95)
 		{
 					//3.set enbale  ISER2 Register
-			*NVIC_ICER2 |= (1<<(IRQ_Number %32));
+			*NVIC_ICER2 = (1<<(IRQ_Number %32));
 
 		}
 	}
@@ -258,13 +258,13 @@ void GPIO_IRQ_Priority (uint8_t IRQ_Number,uint8_t IRQ_Priority)
 	uint8_t iprx = IRQ_Number/4;
 	uint8_t iprx_section = IRQ_Number%4;
 	uint8_t Shift = (8*iprx_section)+(8- Nber_PR_Bits);
-	*(NVIC_PR_BASSEADDR + (4*iprx) )|= (IRQ_Priority << Shift);
+	*(NVIC_PR_BASSEADDR + (iprx) )|= (IRQ_Priority << Shift);
 }
 
 void GPIO_IRQHandling(uint8_t Pin_Number)
 {
 
-		(EXTI->PR |= (1U<<Pin_Number));
+		(EXTI->PR = (1U<<Pin_Number));
 
 }
 
